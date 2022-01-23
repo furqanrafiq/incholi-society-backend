@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Plot extends Model
 {
     use HasFactory;
-    protected $table = 'plots_table';
+    protected $table = 'plot_table';
     public $timestamps = false;
 }

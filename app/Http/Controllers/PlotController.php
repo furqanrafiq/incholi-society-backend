@@ -86,38 +86,39 @@ class PlotController extends Controller
     }
 
     public function getAllPlots(){
-        $plots= Plot::join('members_table','plots_table.member_no','=','members_table.member_no')->get();
+        $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
     }
 
     public function getByPlotNo(Request $request){
-        $plots= Plot::join('members_table','plots_table.member_no','=','members_table.member_no')
-        ->where('plots_table.plot_no',$request->plot_no)
+        $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+        ->where('plot_table.plot_no',$request->plot_no)
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
     }
 
     public function getByFileNo(Request $request){
-        $plots= Plot::join('members_table','plots_table.member_no','=','members_table.member_no')
-        ->where('plots_table.file_no',$request->file_no)
+        $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+        ->where('plot_table.file_no',$request->file_no)
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
     }
 
     public function getByMemberNo(Request $request){
-        $plots= Plot::join('members_table','plots_table.member_no','=','members_table.member_no')
-        ->where('plots_table.member_no',$request->member_no)
+        $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+        ->where('plot_table.member_no',$request->member_no)
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
     }
     
     public function getByMemberName(Request $request){
-        $plots= Member::join('plots_table','members_table.member_no','=','plots_table.member_no')
-        ->where('name',$request->name)
+        $plots= Member::join('plot_table','member_table.member_no','=','plot_table.member_no')
+        // where('name','LIKE','%'.$term.'%')
+        ->where('name', 'LIKE', '%'.$request->name.'%')
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
@@ -137,9 +138,9 @@ class PlotController extends Controller
         $member->name = isset($request->name) ? $request->name : null;
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
-        $member->cell = isset($request->cell) ? $request->cell : null;
-        $member->phone = isset($request->phone) ? $request->phone : null;
-        $member->email = isset($request->email) ? $request->email : null;
+        // $member->cell = isset($request->cell) ? $request->cell : null;
+        // $member->phone = isset($request->phone) ? $request->phone : null;
+        // $member->email = isset($request->email) ? $request->email : null;
 
         $plot->save();
         $member->save();

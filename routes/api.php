@@ -22,6 +22,10 @@ Route::get('/get-by-file-no', [PlotController::class, 'getByFileNo']);
 Route::get('/get-by-member-no', [PlotController::class, 'getByMemberNo']);
 Route::get('/get-by-member-name', [PlotController::class, 'getByMemberName']);
 Route::post('/add-new-plot-member', [PlotController::class, 'addNewPlotMember']);
+Route::post('/update-member', [MemberController::class, 'update']);
+Route::post('/add-new-member', [MemberController::class, 'store']);
+Route::get('/get-member-details', [MemberController::class, 'getMemberDetails']);
+
 // Route::post('/login-instructor', [InstructorController::class, 'login']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
