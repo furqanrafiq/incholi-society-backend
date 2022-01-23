@@ -98,6 +98,14 @@ class MemberController extends Controller
             $member->update(["address" => $request->address]);
         }if(isset($request->member_no)){
             $member->update(["member_no" => $request->member_no]);
+        }if(isset($request->cell)){
+            $member->update(["cell" => $request->cell]);
+        }if(isset($request->phone)){
+            $member->update(["phone" => $request->phone]);
+        }if(isset($request->email)){
+            $member->update(["email" => $request->email]);
+        }if(isset($request->plot_no)){
+            $member->update(["plot_no" => $request->plot_no]);
         }
         $result = ApiHelper::success('Member updated Successfully', $member);
         return response()->json($result, 200);
