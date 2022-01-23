@@ -41,11 +41,11 @@ class MemberController extends Controller
         $member = new Member();
         
         $plot->plot_no = $request->plot_no;
-        $plot->member_no = isset($request->member_no) ? $request->member_no : null;
-        $plot->file_no = isset($request->file_no) ? $request->file_no : null;
+        $plot->member_no = isset($request->member_number) ? $request->member_number : null;
+        $plot->file_no = isset($request->file_number) ? $request->file_number : null;
         // $plot->owner_no = $plotDetails->owner_no + 1;
 
-        $member->member_no = isset($request->member_no) ? $request->member_no : null;
+        $member->member_no = isset($request->member_number) ? $request->member_number : null;
         $member->name = isset($request->name) ? $request->name : null;
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
