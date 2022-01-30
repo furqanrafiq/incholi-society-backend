@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Plot;
+use App\Models\Finance;
 use App\Models\Member;
 use App\Helper\ApiHelper;
+use Validator;
 
 class PlotController extends Controller
 {
@@ -125,6 +127,13 @@ class PlotController extends Controller
     }
 
     public function addNewPlotMember(Request $request){
+        $validator = Validator::make($request->all(), [
+            'member_no' => ['required', 'email', 'unique:plot_table'],
+        ]);
+        if ($validator->fails()) {
+            $result = ApiHelper::validation_error('Membership number already exist', $validator->errors()->all());
+            return response()->json($result, 422);
+        }
         $plotDetails = Plot::where('plot_no',$request->plot_no)->orderBy('owner_no','desc')->first();
         $plot = new Plot();
         $member = new Member();
@@ -138,9 +147,10 @@ class PlotController extends Controller
         $member->name = isset($request->name) ? $request->name : null;
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
-        // $member->cell = isset($request->cell) ? $request->cell : null;
-        // $member->phone = isset($request->phone) ? $request->phone : null;
-        // $member->email = isset($request->email) ? $request->email : null;
+        $member->cell = isset($request->cell) ? $request->cell : null;
+        $member->phone = isset($request->phone) ? $request->phone : null;
+        $member->email = isset($request->email) ? $request->email : null;
+        $member->cnic = isset($request->cnic) ? $request->cnic : null;
 
         $plot->save();
         $member->save();
@@ -148,4 +158,29 @@ class PlotController extends Controller
         $result = ApiHelper::success('New member added Successfully', $plot);
         return response()->json($result, 200);
     }
+
+    public function getCurrentOwner(Request $request){
+        $plotDetails;
+        $financeDetails;
+        if(isset($request->plot_no)){
+            $memberDetails = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+            ->where('plot_table.plot_no',$request->plot_no)
+            ->orderBy('owner_no','desc')
+            ->first()
+            ->toArray();
+            $financeDetails = Finance::where('file_no',$plotDetails->file_no)->get();
+        }else{
+            $memberDetails = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+            ->where('plot_table.file_no',$request->file_no)
+            ->orderBy('owner_no','desc')
+            ->first()
+            ->toArray();
+            $financeDetails = Finance::where('file_no',$request->file_no)->get();
+        }
+        $plotDetails['financeDetails'] = $financeDetails;
+        $plotDetails['memberDetails'] = $memberDetails;
+        $result = ApiHelper::success('Details loaded Successfully', $plotDetails);
+        return response()->json($result, 200);
+    }
+
 }

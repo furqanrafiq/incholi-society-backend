@@ -60,6 +60,16 @@ class MemberController extends Controller
         return response()->json($result, 200);
     }
 
+    public function searchMemberNumber(Request $request){
+        if (Member::where('member_no', $request->member_no)->exists()) {
+            $result = ApiHelper::successMessage('Member number already exists');
+            return response()->json($result, 201);
+        }else{
+            $result = ApiHelper::successMessage('No member number');
+            return response()->json($result, 200);
+        }
+    }
+
     /**
      * Display the specified resource.
      *

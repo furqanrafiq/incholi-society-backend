@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlotController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\FinanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,9 @@ Route::post('/add-new-plot-member', [PlotController::class, 'addNewPlotMember'])
 Route::post('/update-member', [MemberController::class, 'update']);
 Route::post('/add-new-member', [MemberController::class, 'store']);
 Route::get('/get-member-details', [MemberController::class, 'getMemberDetails']);
+Route::get('/get-finance-details', [FinanceController::class, 'getFinanceDetails']);
+Route::get('/search-member-number', [MemberController::class, 'searchMemberNumber']);
+Route::get('/get-current-owner-details', [PlotController::class, 'getCurrentOwner']);
 
 // Route::post('/login-instructor', [InstructorController::class, 'login']);
 
