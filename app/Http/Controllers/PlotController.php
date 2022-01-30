@@ -96,6 +96,7 @@ class PlotController extends Controller
     public function getByPlotNo(Request $request){
         $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
         ->where('plot_table.plot_no',$request->plot_no)
+        ->orderBy('owner_no','desc')
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
@@ -104,6 +105,7 @@ class PlotController extends Controller
     public function getByFileNo(Request $request){
         $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
         ->where('plot_table.file_no',$request->file_no)
+        ->orderBy('owner_no','desc')
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
@@ -112,6 +114,7 @@ class PlotController extends Controller
     public function getByMemberNo(Request $request){
         $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
         ->where('plot_table.member_no',$request->member_no)
+        ->orderBy('owner_no','desc')
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
@@ -121,6 +124,7 @@ class PlotController extends Controller
         $plots= Member::join('plot_table','member_table.member_no','=','plot_table.member_no')
         // where('name','LIKE','%'.$term.'%')
         ->where('name', 'LIKE', '%'.$request->name.'%')
+        ->orderBy('owner_no','desc')
         ->get();
         $result = ApiHelper::success('Plots Loaded Successfully', $plots);
         return response()->json($result, 200);
