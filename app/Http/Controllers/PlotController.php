@@ -131,16 +131,17 @@ class PlotController extends Controller
     }
 
     public function addNewPlotMember(Request $request){
-        $validator = Validator::make($request->all(), [
-            'member_no' => ['required', 'email', 'unique:plot_table'],
-        ]);
-        if ($validator->fails()) {
-            $result = ApiHelper::validation_error('Membership number already exist', $validator->errors()->all());
-            return response()->json($result, 422);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'member_no' => ['required', 'email', 'unique:plot_table'],
+        // ]);
+        // if ($validator->fails()) {
+        //     $result = ApiHelper::validation_error('Membership number already exist', $validator->errors()->all());
+        //     return response()->json($result, 422);
+        // }
         $plotDetails = Plot::where('plot_no',$request->plot_no)->orderBy('owner_no','desc')->first();
         $plot = new Plot();
         $member = new Member();
+        $ledger = new Finance();
         
         $plot->plot_no = $request->plot_no;
         $plot->member_no = isset($request->member_no) ? $request->member_no : null;
@@ -156,8 +157,17 @@ class PlotController extends Controller
         $member->email = isset($request->email) ? $request->email : null;
         $member->cnic = isset($request->cnic) ? $request->cnic : null;
 
+        $ledger->plot_no = $request->plot_no;
+        $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
+        $ledger->file_no = isset($request->file_no) ? $request->file_no : null;
+        $ledger->Date = isset($request->Date) ? $request->Date : null;
+        $ledger->Description = isset($request->Description) ? $request->Description : null;
+        $ledger->Amount = isset($request->Amount) ? $request->Amount : null;
+        $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+
         $plot->save();
         $member->save();
+        $ledger->save();
 
         $result = ApiHelper::success('New member added Successfully', $plot);
         return response()->json($result, 200);
@@ -171,14 +181,22 @@ class PlotController extends Controller
             ->where('plot_table.plot_no',$request->plot_no)
             ->orderBy('owner_no','desc')
             ->first()
-            ->toArray();
-            $financeDetails = Finance::where('file_no',$plotDetails->file_no)->get();
+            ->get();
+            if($memberDetails == null){
+                $result = ApiHelper::success('No Plot found', $plotDetails);
+                return response()->json($result, 400);
+            }
+            $financeDetails = Finance::where('file_no',$memberDetails->file_no)->get();
         }else{
             $memberDetails = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
             ->where('plot_table.file_no',$request->file_no)
             ->orderBy('owner_no','desc')
             ->first()
-            ->toArray();
+            ->get();
+            if($memberDetails == null){
+                $result = ApiHelper::success('No Plot found', $plotDetails);
+                return response()->json($result, 400);
+            }
             $financeDetails = Finance::where('file_no',$request->file_no)->get();
         }
         $plotDetails['financeDetails'] = $financeDetails;

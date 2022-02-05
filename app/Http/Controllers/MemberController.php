@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Plot;
 use App\Models\Member;
+use App\Models\Finance;
 use App\Helper\ApiHelper;
 
 class MemberController extends Controller
@@ -39,8 +40,9 @@ class MemberController extends Controller
     {
         $plot = new Plot();
         $member = new Member();
+        $ledger = new Finance();
         
-        $plot->plot_no = $request->plot_number;
+        $plot->plot_no = $request->plot_no;
         $plot->member_no = isset($request->member_no) ? $request->member_no : null;
         $plot->file_no = isset($request->file_number) ? $request->file_number : null;
         // $plot->owner_no = $plotDetails->owner_no + 1;
@@ -49,12 +51,21 @@ class MemberController extends Controller
         $member->name = isset($request->name) ? $request->name : null;
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
-        // $member->cell = isset($request->cell) ? $request->cell : null;
-        // $member->phone = isset($request->phone) ? $request->phone : null;
-        // $member->email = isset($request->email) ? $request->email : null;
+        $member->cell = isset($request->cell) ? $request->cell : null;
+        $member->phone = isset($request->phone) ? $request->phone : null;
+        $member->email = isset($request->email) ? $request->email : null;
+
+        $ledger->plot_no = $request->plot_no;
+        $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
+        $ledger->file_no = isset($request->file_number) ? $request->file_number : null;
+        $ledger->Date = isset($request->Date) ? $request->Date : null;
+        $ledger->Description = isset($request->Description) ? $request->Description : null;
+        $ledger->Amount = isset($request->Amount) ? $request->Amount : null;
+        $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
 
         $plot->save();
         $member->save();
+        $ledger->save();
 
         $result = ApiHelper::success('New member added Successfully', $plot);
         return response()->json($result, 200);

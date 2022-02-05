@@ -14,4 +14,42 @@ class FinanceController extends Controller
         $result = ApiHelper::success('Finance details loaded Successfully', $finance);
         return response()->json($result, 200);
     }
+
+    public function update(Request $request){
+        $ledger = Finance::where('id',$request->id);
+        if(isset($request->Amount)){
+            $ledger->update(["Amount" => $request->Amount]);
+        }if(isset($request->Description)){
+            $ledger->update(["Description" => $request->Description]);
+        }if(isset($request->Receipt)){
+            $ledger->update(["Receipt" => $request->Receipt]);
+        }if(isset($request->file_no)){
+            $ledger->update(["file_no" => $request->file_no]);
+        }if(isset($request->member_no)){
+            $ledger->update(["member_no" => $request->member_no]);
+        }
+        $result = ApiHelper::success('Details updated Successfully', $ledger);
+        return response()->json($result, 200);
+    }
+
+    public function getLedgerDetails(Request $request){
+        $ledger = Finance::where('id',$request->id)->get();
+        
+        $result = ApiHelper::success('Finance details loaded Successfully', $ledger);
+        return response()->json($result, 200);
+    }
+
+    public function store(Request $request){
+        $ledger = new Finance();
+        $ledger->plot_no = $request->plot_no;
+        $ledger->file_no = $request->file_no;
+        $ledger->member_no = $request->member_no;
+        $ledger->Date = $request->Date;
+        $ledger->Description = $request->Description;
+        $ledger->Receipt = $request->Receipt;
+        $ledger->Amount = $request->Amount;
+        $ledger->save();
+        $result = ApiHelper::success('Finance details saved Successfully', $ledger);
+        return response()->json($result, 200);
+    }
 }

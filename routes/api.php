@@ -29,6 +29,11 @@ Route::get('/get-member-details', [MemberController::class, 'getMemberDetails'])
 Route::get('/get-finance-details', [FinanceController::class, 'getFinanceDetails']);
 Route::get('/search-member-number', [MemberController::class, 'searchMemberNumber']);
 Route::get('/get-current-owner-details', [PlotController::class, 'getCurrentOwner']);
+Route::get('/get-ledger-details', [FinanceController::class, 'getLedgerDetails']);
+Route::post('/update-ledger-details', [FinanceController::class, 'update']);
+Route::post('/add-ledger', [FinanceController::class, 'store']);
+
+
 
 // Route::post('/login-instructor', [InstructorController::class, 'login']);
 
