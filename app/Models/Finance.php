@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Finance extends Model
 {
     use HasFactory;
-    protected $table = 'finance_table';
+    protected $table = 'finance';
     public $timestamps = false;
 }

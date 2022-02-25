@@ -18,6 +18,7 @@ use App\Http\Controllers\FinanceController;
 */
 
 Route::get('/get-all-plots', [PlotController::class, 'getAllPlots']);
+Route::get('/get-all-nph-holders', [PlotController::class, 'getAllNphHolders']);
 Route::get('/get-by-plot-no', [PlotController::class, 'getByPlotNo']);
 Route::get('/get-by-file-no', [PlotController::class, 'getByFileNo']);
 Route::get('/get-by-member-no', [PlotController::class, 'getByMemberNo']);
