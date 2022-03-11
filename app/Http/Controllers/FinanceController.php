@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Finance;
 use App\Helper\ApiHelper;
+use Carbon\Carbon;
 
 class FinanceController extends Controller
 {
@@ -40,15 +41,17 @@ class FinanceController extends Controller
     }
 
     public function store(Request $request){
-        $ledger = new Finance();
-        $ledger->plot_no = $request->plot_no;
-        $ledger->file_no = $request->file_no;
-        $ledger->member_no = $request->member_no;
-        $ledger->Date = $request->Date;
-        $ledger->Description = $request->Description;
-        $ledger->Receipt = $request->Receipt;
-        $ledger->Amount = $request->Amount;
-        $ledger->save();
+        foreach ($request->descriptionArray as $key => $value) {
+            $ledger = new Finance();
+            $ledger->plot_no = $request->plot_no;
+            $ledger->file_no = $request->file_no;
+            $ledger->member_no = $request->member_no;
+            $ledger->Date = Carbon::parse($request->Date);
+            $ledger->Description = $value['description'];
+            $ledger->Amount = $value['amount'];
+            $ledger->Receipt = $request->Receipt;
+            $ledger->save();
+        }
         $result = ApiHelper::success('Finance details saved Successfully', $ledger);
         return response()->json($result, 200);
     }

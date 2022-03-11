@@ -7,6 +7,7 @@ use App\Models\Plot;
 use App\Models\Member;
 use App\Models\Finance;
 use App\Helper\ApiHelper;
+use Carbon\Carbon;
 
 class MemberController extends Controller
 {
@@ -40,7 +41,6 @@ class MemberController extends Controller
     {
         $plot = new Plot();
         $member = new Member();
-        $ledger = new Finance();
         
         $plot->plot_no = $request->plot_no;
         $plot->member_no = isset($request->member_no) ? $request->member_no : null;
@@ -52,20 +52,24 @@ class MemberController extends Controller
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
         $member->cell = isset($request->cell) ? $request->cell : null;
-        $member->phone = isset($request->phone) ? $request->phone : null;
+        $member->phone = isset($request->mobile) ? $request->mobile : null;
         $member->email = isset($request->email) ? $request->email : null;
+        $member->cnic = isset($request->cnic) ? $request->cnic : null;
 
-        $ledger->plot_no = $request->plot_no;
-        $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
-        $ledger->file_no = isset($request->file_number) ? $request->file_number : null;
-        $ledger->Date = isset($request->Date) ? $request->Date : null;
-        $ledger->Description = isset($request->Description) ? $request->Description : null;
-        $ledger->Amount = isset($request->Amount) ? $request->Amount : null;
-        $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+        foreach ($request->descriptionArray as $key => $value) {
+            $ledger = new Finance();
+            $ledger->plot_no = $request->plot_no;
+            $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
+            $ledger->file_no = isset($request->file_number) ? $request->file_number : null;
+            $ledger->Date = isset($request->Date) ? Carbon::parse($request->Date) : null;
+            $ledger->Description = isset($value['description']) ? $value['description'] : null;
+            $ledger->Amount = isset($value['amount']) ? $value['amount'] : null;
+            $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+            $ledger->save();
+        }
 
         $plot->save();
         $member->save();
-        $ledger->save();
 
         $result = ApiHelper::success('New member added Successfully', $plot);
         return response()->json($result, 200);
@@ -137,6 +141,12 @@ class MemberController extends Controller
         ->where('plot_table.member_no',$request->member_no)
         ->get();
         $result = ApiHelper::success('Member Loaded Successfully', $plots);
+        return response()->json($result, 200);
+    }
+
+    public function getAllMembers(){
+        $LatestMemberNumber= Member::max('member_no');
+        $result = ApiHelper::success('Member Loaded Successfully', $LatestMemberNumber);
         return response()->json($result, 200);
     }
     

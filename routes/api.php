@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlotController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\DescriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::get('/get-current-owner-details', [PlotController::class, 'getCurrentOwne
 Route::get('/get-ledger-details', [FinanceController::class, 'getLedgerDetails']);
 Route::post('/update-ledger-details', [FinanceController::class, 'update']);
 Route::post('/add-ledger', [FinanceController::class, 'store']);
+Route::get('/all-descriptions', [DescriptionController::class, 'getAllDescriptions']);
+Route::get('/get-all-members', [MemberController::class, 'getAllMembers']);
 
 
 

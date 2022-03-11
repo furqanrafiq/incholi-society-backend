@@ -152,7 +152,6 @@ class PlotController extends Controller
         $plotDetails = Plot::where('plot_no',$request->plot_no)->orderBy('owner_no','desc')->first();
         $plot = new Plot();
         $member = new Member();
-        $ledger = new Finance();
         
         $plot->plot_no = $request->plot_no;
         $plot->member_no = isset($request->member_no) ? $request->member_no : null;
@@ -164,17 +163,20 @@ class PlotController extends Controller
         $member->relation = isset($request->relation) ? $request->relation : null;
         $member->address = isset($request->address)? $request->address : null;
         $member->cell = isset($request->cell) ? $request->cell : null;
-        $member->phone = isset($request->phone) ? $request->phone : null;
+        $member->phone = isset($request->mobile) ? $request->mobile : null;
         $member->email = isset($request->email) ? $request->email : null;
         $member->cnic = isset($request->cnic) ? $request->cnic : null;
 
-        $ledger->plot_no = $request->plot_no;
-        $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
-        $ledger->file_no = isset($request->file_no) ? $request->file_no : null;
-        $ledger->Date = isset($request->Date) ? $request->Date : null;
-        $ledger->Description = isset($request->Description) ? $request->Description : null;
-        $ledger->Amount = isset($request->Amount) ? $request->Amount : null;
-        $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+        foreach ($descriptionArray as $key => $value) {
+            $ledger = new Finance();
+            $ledger->plot_no = $request->plot_no;
+            $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
+            $ledger->file_no = isset($request->file_number) ? $request->file_number : null;
+            $ledger->Date = isset($request->Date) ? Carbon::parse($request->Date) : null;
+            $ledger->Description = isset($value['description']) ? $value['description'] : null;
+            $ledger->Amount = isset($value['amount']) ? $value['amount'] : null;
+            $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+        }
 
         $plot->save();
         $member->save();
@@ -202,8 +204,7 @@ class PlotController extends Controller
             $memberDetails = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
             ->where('plot_table.file_no',$request->file_no)
             ->orderBy('owner_no','desc')
-            ->first()
-            ->get();
+            ->first();
             if($memberDetails == null){
                 $result = ApiHelper::success('No Plot found', $plotDetails);
                 return response()->json($result, 400);
