@@ -36,7 +36,7 @@ Route::post('/update-ledger-details', [FinanceController::class, 'update']);
 Route::post('/add-ledger', [FinanceController::class, 'store']);
 Route::get('/all-descriptions', [DescriptionController::class, 'getAllDescriptions']);
 Route::get('/get-all-members', [MemberController::class, 'getAllMembers']);
-
+Route::post('/msi', [PlotController::class, 'msi']);
 
 
 // Route::post('/login-instructor', [InstructorController::class, 'login']);

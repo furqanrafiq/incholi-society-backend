@@ -7,6 +7,7 @@ use App\Models\Plot;
 use App\Models\Finance;
 use App\Models\Member;
 use App\Helper\ApiHelper;
+use Carbon\Carbon;
 use Validator;
 
 class PlotController extends Controller
@@ -167,20 +168,20 @@ class PlotController extends Controller
         $member->email = isset($request->email) ? $request->email : null;
         $member->cnic = isset($request->cnic) ? $request->cnic : null;
 
-        foreach ($descriptionArray as $key => $value) {
+        foreach ($request->descriptionArray as $key => $value) {
             $ledger = new Finance();
             $ledger->plot_no = $request->plot_no;
             $ledger->member_no = isset($request->member_no) ? $request->member_no : null;
-            $ledger->file_no = isset($request->file_number) ? $request->file_number : null;
+            $ledger->file_no = isset($request->file_no) ? $request->file_no : null;
             $ledger->Date = isset($request->Date) ? Carbon::parse($request->Date) : null;
             $ledger->Description = isset($value['description']) ? $value['description'] : null;
             $ledger->Amount = isset($value['amount']) ? $value['amount'] : null;
             $ledger->Receipt = isset($request->Receipt) ? $request->Receipt : null;
+            $ledger->save();
         }
 
         $plot->save();
         $member->save();
-        $ledger->save();
 
         $result = ApiHelper::success('New member added Successfully', $plot);
         return response()->json($result, 200);
@@ -215,6 +216,53 @@ class PlotController extends Controller
         $plotDetails['memberDetails'] = $memberDetails;
         $result = ApiHelper::success('Details loaded Successfully', $plotDetails);
         return response()->json($result, 200);
+    }
+
+    public function msi(Request $request){
+        if($request->has('plot_no') && $request->plot_no != ''){
+            $plots = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+            ->where('plot_table.plot_no',$request->plot_no)
+            ->orderBy('owner_no','desc')
+            ->first();
+
+            $financeDetails = Finance::where('plot_no',$request->plot_no)->get();
+            $plots['financeDetails'] = $financeDetails;
+            $result = ApiHelper::success('Details loaded Successfully', $plots);
+            return response()->json($result, 200);
+        }
+        if($request->has('member_no') && $request->member_no != ''){
+            $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+            ->where('plot_table.member_no',$request->member_no)
+            ->orderBy('owner_no','desc')
+            ->first();
+
+            $financeDetails = Finance::where('member_no',$request->member_no)->get();
+            $plots['financeDetails'] = $financeDetails;
+            $result = ApiHelper::success('Details loaded Successfully', $plots);
+            return response()->json($result, 200);
+        }
+        if($request->has('file_no') && $request->file_no != ''){
+            $plots = Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+            ->where('plot_table.file_no',$request->file_no)
+            ->orderBy('owner_no','desc')
+            ->first();
+
+            $financeDetails = Finance::where('file_no',$request->file_no)->get();
+            $plots['financeDetails'] = $financeDetails;
+            $result = ApiHelper::success('Details loaded Successfully', $plots);
+            return response()->json($result, 200);
+        }
+        // if($request->has('plot_no') && $request->has('file_no')){
+        //     $plots= Plot::join('member_table','plot_table.member_no','=','member_table.member_no')
+        //     ->where('plot_table.plot_no',$request->plot_no)
+        //     ->orderBy('owner_no','desc')
+        //     ->get();
+
+        //     $financeDetails = Finance::where($request->file_no)->get();
+        //     $plots['financeDetails'] = $financeDetails;
+        //     $result = ApiHelper::success('Details loaded Successfully', $plots);
+        //     return response()->json($result, 200);              
+        // }
     }
 
 }
