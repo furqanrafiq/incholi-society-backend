@@ -6,6 +6,8 @@ use App\Http\Controllers\PlotController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\DescriptionController;
+use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +39,10 @@ Route::post('/add-ledger', [FinanceController::class, 'store']);
 Route::get('/all-descriptions', [DescriptionController::class, 'getAllDescriptions']);
 Route::get('/get-all-members', [MemberController::class, 'getAllMembers']);
 Route::post('/msi', [PlotController::class, 'msi']);
-
+Route::post('/create-announcement', [AnnouncementController::class, 'store']);
+Route::get('/getAllAnnouncements', [AnnouncementController::class, 'getAllAnnouncements']);
+Route::post('/add-gallery', [GalleryController::class, 'store']);
+Route::get('/show-gallery', [GalleryController::class, 'showGallery']);
 
 // Route::post('/login-instructor', [InstructorController::class, 'login']);
 
