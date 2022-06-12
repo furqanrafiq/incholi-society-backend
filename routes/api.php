@@ -8,6 +8,7 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\DescriptionController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\CommitteeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,9 @@ Route::post('/create-announcement', [AnnouncementController::class, 'store']);
 Route::get('/getAllAnnouncements', [AnnouncementController::class, 'getAllAnnouncements']);
 Route::post('/add-gallery', [GalleryController::class, 'store']);
 Route::get('/show-gallery', [GalleryController::class, 'showGallery']);
+Route::post('/add-committe-member', [CommitteeController::class, 'addMember']);
+Route::get('/get-committe-member', [CommitteeController::class, 'getCommitteeMembers']);
+Route::post('/delete-committee-member', [CommitteeController::class, 'deleteCommitteeMember']);
 
 // Route::post('/login-instructor', [InstructorController::class, 'login']);
 
